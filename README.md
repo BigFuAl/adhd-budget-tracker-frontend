@@ -1,116 +1,70 @@
-# 💸 ADHD-Friendly Budget Tracker
+# Getting Started with Create React App
 
-A full stack budgeting app designed with simplicity, clarity, and ADHD brains in mind. Track your expenses, visualize your spending, and stay on top of your financial habits — without the overwhelm.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
----
+## Available Scripts
 
-## 🚀 Features
+In the project directory, you can run:
 
-- 🔐 User Authentication (JWT)
-- 💰 Add, edit, and delete expenses
-- 📊 Category breakdown + spending charts
-- 🔍 Filter expenses by category
-- 📅 Visual feedback for new or updated entries
-- 📡 Full stack: React + Express + MongoDB
-- 🔒 Secure backend routes with token-based auth
-- 🌐 Deployed with Azure Static Web Apps (or your deployment of choice)
+### `npm start`
 
----
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## 🧠 Tech Stack
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-| Layer         | Tech                        |
-|---------------|-----------------------------|
-| Frontend      | React, Recharts             |
-| Backend       | Node.js, Express            |
-| Database      | MongoDB (Mongoose)          |
-| Auth          | JWT (token-based)           |
-| Deployment    | Azure Static Web Apps (or Netlify + Render) |
+### `npm test`
 
----
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## 📸 Screenshots
+### `npm run build`
 
-> _Paste screenshots here once ready — drag them into this file or host them externally._
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
----
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-## 🛠️ Getting Started
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Prerequisites
+### `npm run eject`
 
-- Node.js (v18 or above)
-- MongoDB (local or Atlas)
-- Git
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### Installation
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```bash
-# Clone the repo
-git clone https://github.com/BigFuAl/adhd-budget-tracker.git
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-# Navigate into backend
-cd adhd-budget-tracker/backend
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-# Install backend dependencies
-npm install
+## Learn More
 
-# Create a .env file
-touch .env
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-<pre><code>### 🔒 Environment Variables
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-Inside your `.env` file:
+### Code Splitting
 
-```
-MONGO_URI=your_mongodb_connection  
-JWT_SECRET=your_jwt_secret  
-PORT=3001
-```
-</code></pre>
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
+### Analyzing the Bundle Size
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-# Start backend server
-npm run dev
+### Making a Progressive Web App
 
-Then in another terminal:
-# Navigate into frontend
-cd ../frontend
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-# Install frontend deps
-npm install
+### Advanced Configuration
 
-# Start the React app
-npm start
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
+### Deployment
 
-🧠 Why This App?
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-This was built to help users with ADHD:
-	•	Reduce decision fatigue
-	•	Focus on essentials
-	•	Get visual feedback for motivation
-	•	Keep things simple + fast
+### `npm run build` fails to minify
 
-⸻
-
-🙌 Author
-
-Aliou Cissé
-@BigFuAl
-
-⸻
-
-✅ Roadmap
-	•	Add monthly budget caps & alerts
-	•	Integrate recurring expense logic
-	•	Add export to CSV
-	•	Turn into a native mobile app via React Native
-
-⸻
-
-📃 License
-
-MIT — free to use, fork, remix.
----
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

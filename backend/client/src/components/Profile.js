@@ -10,7 +10,7 @@ const Profile = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch('http://localhost:3001/api/profile', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/profile`,  {
       headers: {
         Authorization: `Bearer ${token}`
       }

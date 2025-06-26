@@ -17,7 +17,7 @@ const Dashboard = ({ user }) => {
   useEffect(() => {
   if (!token) return;
 
-  fetch('http://localhost:3001/api/expenses', {
+  fetch(`${process.env.REACT_APP_API_URL}/api/expenses`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -34,7 +34,7 @@ const Dashboard = ({ user }) => {
       return;
     }
 
-    const res = await fetch('http://localhost:3001/api/expenses', {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const Dashboard = ({ user }) => {
     }
   };
   const handleDeleteExpense = async (id) => {
-  const res = await fetch(`http://localhost:3001/api/expenses/${id}`, {
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`
@@ -89,7 +89,7 @@ const cancelEditing = () => {
 };
 
 const handleUpdateExpense = async (id) => {
-  const res = await fetch(`http://localhost:3001/api/expenses/${id}`, {
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

@@ -26,8 +26,10 @@ app.use('/api/login', limiter);
 // Middleware
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://adhd-tracker-frontend.netlify.app' // <-- replace with actual Netlify URL if different
+  'https://adhd-tracker-frontend.netlify.app', // <-- replace with actual Netlify URL if different
+   'https://agreeable-pebble-07982e410.2.azurestaticapps.net'
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {

@@ -68,7 +68,7 @@ const Dashboard = ({ user }) => {
     const confirmed = window.confirm('Are you sure you want to delete this expense?');
     if (!confirmed) return;
 
-    const res = await fetch(`http://localhost:3001/api/expenses/${id}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -98,7 +98,7 @@ const Dashboard = ({ user }) => {
   };
 
   const handleUpdateExpense = async (id) => {
-    const res = await fetch(`http://localhost:3001/api/expenses/${id}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

@@ -40,18 +40,52 @@ const Register = () => {
   };
 
   return (
-    <div style={{ margin: '20px' }}>
-      <h2>Register</h2>
+  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4">
+    <div className="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-sm">
+      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
       <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" onChange={handleChange} required /><br />
-        <input name="email" placeholder="Email" onChange={handleChange} required /><br />
-        <input name="password" placeholder="Password" type="password" onChange={handleChange} required /><br />
-        <button type="submit" disabled={loading}>
+        <input
+          name="name"
+          placeholder="Name"
+          onChange={handleChange}
+          required
+          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+        />
+        <input
+          name="email"
+          placeholder="Email"
+          type="email"
+          onChange={handleChange}
+          required
+          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+        />
+        <input
+          name="password"
+          placeholder="Password"
+          type="password"
+          onChange={handleChange}
+          required
+          className="w-full p-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+        >
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && (
+        <p
+          className={`mt-4 text-center text-sm ${
+            message.toLowerCase().includes('success') ? 'text-green-400' : 'text-red-400'
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
+  </div>
   );
 };
 

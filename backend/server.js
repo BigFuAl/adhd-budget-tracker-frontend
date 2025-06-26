@@ -24,8 +24,19 @@ const limiter = rateLimit({
 app.use('/api/login', limiter);
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://adhd-tracker-frontend.netlify.app' // <-- replace with actual Netlify URL if different
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed from this origin'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json()); // Parses incoming JSON

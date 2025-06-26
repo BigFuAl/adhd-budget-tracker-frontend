@@ -16,7 +16,7 @@ router.get('/profile', protect, (req, res) => {
     user: req.user
   });
   router.get('/test', (req, res) => {
-  res.json({ message: 'Test route working' });
+  res.json({ message: 'Test route working' }); // Dummy comment to trigger redeploy
 });
 });
 

@@ -2,24 +2,25 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../controllers/authController');
 const protect = require('../middleware/authMiddleware');
+const rateLimit = require('express-rate-limit');
 
-// Route: POST /api/register
+// Apply rate limiter only to login route
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Too many login attempts. Please try again later.'
+});
+
 router.post('/register', registerUser);
-
-// Route: POST /api/login
-router.post('/login', loginUser);
-
-// Route: GET /api/profile (protected)
+router.post('/login', loginLimiter, loginUser);
 router.get('/profile', protect, (req, res) => {
   res.json({
     message: 'Access granted to protected profile route',
     user: req.user
   });
 });
-
-// ✅ Properly placed test route
 router.get('/test', (req, res) => {
-  res.json({ message: 'Test route working' }); // Dummy comment to trigger redeploy
+  res.json({ message: 'Test route working' });
 });
 
 module.exports = router;

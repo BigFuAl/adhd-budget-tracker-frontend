@@ -1,5 +1,4 @@
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
@@ -13,15 +12,6 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 const app = express();
 app.use(helmet()); // Secures HTTP headers
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
-  message: "Too many login attempts from this IP. Try again later."
-});
-
-// Apply limiter only to /api/login
-app.use('/api/auth/login', limiter);
 
 // Middleware
 const allowedOrigins = [

@@ -21,6 +21,10 @@ const Dashboard = ({ user }) => {
   const [editAmount, setEditAmount] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [newlyAddedId, setNewlyAddedId] = useState(null);
+  const [showCheck, setShowCheck] = useState(false);
+  const formatCurrency = (value) => {
+  return `$${parseFloat(value).toFixed(2)}`;
+};
 
   const token = localStorage.getItem('token');
 
@@ -59,6 +63,8 @@ const Dashboard = ({ user }) => {
       setAmount('');
       setCategory('');
       setMessage('Expense added successfully!');
+      setShowCheck(true);
+setTimeout(() => setShowCheck(false), 2000);
     } else {
       setMessage(data.message || 'Error adding expense');
     }
@@ -123,15 +129,15 @@ const Dashboard = ({ user }) => {
 
   const getMonthlyTotal = () => {
     const now = new Date();
-    return expenses
-      .filter(exp => {
-        const date = new Date(exp.createdAt);
-        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-      })
-      .reduce((sum, exp) => sum + parseFloat(exp.amount), 0)
-      .toFixed(2);
+    return formatCurrency(
+  expenses
+    .filter(exp => {
+      const date = new Date(exp.createdAt);
+      return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    })
+    .reduce((sum, exp) => sum + parseFloat(exp.amount), 0)
+);
   };
-
   const getCategoryBreakdown = () => {
     const now = new Date();
     const filtered = expenses.filter(exp => {
@@ -197,8 +203,28 @@ const Dashboard = ({ user }) => {
         <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount" type="number" />
         <input value={category} onChange={e => setCategory(e.target.value)} placeholder="Category (optional)" />
         <button onClick={handleAddExpense}>Add</button>
-        {message && <p style={{ color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
-      </div>
+        <div style={{ height: '30px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  {message && (
+    <p style={{
+      color: message.toLowerCase().includes('success') ? 'green' : 'red',
+      fontWeight: 'bold',
+      margin: 0
+    }}>
+      {message}
+    </p>
+  )}
+  {showCheck && (
+    <span style={{
+      opacity: showCheck ? 1 : 0,
+      transition: 'opacity 0.5s ease-in-out',
+      fontSize: '1.5rem',
+      color: 'green'
+    }}>
+      ✅
+    </span>
+  )}
+  </div>
+</div>
 
       <h4>Total this month: ${getMonthlyTotal()}</h4>
       <div>
@@ -208,28 +234,28 @@ const Dashboard = ({ user }) => {
   <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
     {Object.entries(getCategoryBreakdown()).map(([cat, total]) => (
       <li key={cat} style={{ marginBottom: '4px' }}>
-        <strong>{cat}:</strong> ${total.toFixed(2)}
+        <strong>{cat}:</strong> {formatCurrency(total)}
       </li>
     ))}
   </ul>
 </div>
-  <ul>
-    {Object.entries(getCategoryBreakdown()).map(([cat, total]) => (
-      <li key={cat}>
-        {cat}: ${total.toFixed(2)}
-      </li>
-    ))}
-  </ul>
+  
 </div>
 
       <div>
         <h4>Filter by Category</h4>
-        <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-          <option value="">All</option>
-          {[...new Set(expenses.map(exp => exp.category?.trim() || 'Uncategorized'))].map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
+       <select
+  value={categoryFilter}
+  onChange={e => setCategoryFilter(e.target.value)}
+  style={{ marginTop: '10px', padding: '6px', borderRadius: '4px' }}
+>
+  <option value="">All Categories</option>
+  {[...new Set(expenses.map(exp => exp.category?.trim() || 'Uncategorized'))]
+    .sort((a, b) => a.localeCompare(b))
+    .map(cat => (
+      <option key={cat} value={cat}>{cat}</option>
+  ))}
+</select>
       </div>
 
       <div style={{ width: '100%', height: 300, marginTop: 20 }}>
@@ -244,44 +270,53 @@ const Dashboard = ({ user }) => {
         </ResponsiveContainer>
       </div>
 
-      <ul>
-        {expenses
-          .filter(exp => {
-            const cat = exp.category?.trim() || 'Uncategorized';
-            return categoryFilter === '' || categoryFilter === cat;
-          })
-          .map(exp => (
-            <li
-              key={exp._id}
-              style={{
-                backgroundColor:
-                  editingId === exp._id ? '#eef6ff' :
-                  newlyAddedId === exp._id ? '#fff3cd' :
-                  isToday(exp.createdAt) ? '#d4edda' : 'transparent',
-                padding: '10px',
-                marginBottom: '6px',
-                borderRadius: '6px'
-              }}
-            >
-              {editingId === exp._id ? (
-                <>
-                  <input value={editDescription} onChange={e => setEditDescription(e.target.value)} />
-                  <input value={editAmount} onChange={e => setEditAmount(e.target.value)} />
-                  <input value={editCategory} onChange={e => setEditCategory(e.target.value)} />
-                  <button onClick={() => handleUpdateExpense(exp._id)}>Save</button>
-                  <button onClick={cancelEditing}>Cancel</button>
-                </>
-              ) : (
-                <>
-                  {exp.description} – ${parseFloat(exp.amount).toFixed(2)} ({exp.category || 'Uncategorized'})
-                  <button onClick={() => startEditing(exp)} style={{ marginLeft: 10 }}>Edit</button>
-                  <button onClick={() => handleDeleteExpense(exp._id)} style={{ marginLeft: 10, color: 'red' }}>Delete</button>
-                </>
-              )}
-            </li>
-          ))}
-      </ul>
-    </div>
+      {(() => {
+  const filteredExpenses = expenses.filter(exp => {
+    const cat = exp.category?.trim() || 'Uncategorized';
+    return categoryFilter === '' || categoryFilter === cat;
+  });
+
+  if (filteredExpenses.length === 0) {
+    return <p style={{ marginTop: '20px', color: '#888' }}>No expenses to show. Add your first one to get started 💸</p>;
+  }
+
+  return (
+    <ul>
+      {filteredExpenses.map(exp => (
+        <li
+          key={exp._id}
+          style={{
+            backgroundColor:
+              editingId === exp._id ? '#eef6ff' :
+              newlyAddedId === exp._id ? '#fff3cd' :
+              isToday(exp.createdAt) ? '#d4edda' : 'transparent',
+            padding: '10px',
+            marginBottom: '6px',
+            borderRadius: '6px'
+          }}
+        >
+          {editingId === exp._id ? (
+            <>
+              <input value={editDescription} onChange={e => setEditDescription(e.target.value)} />
+              <input value={editAmount} onChange={e => setEditAmount(e.target.value)} />
+              <input value={editCategory} onChange={e => setEditCategory(e.target.value)} />
+              <button onClick={() => handleUpdateExpense(exp._id)}>Save</button>
+              <button onClick={cancelEditing}>Cancel</button>
+            </>
+          ) : (
+            <>
+              {exp.description} – {formatCurrency(exp.amount)}({exp.category || 'Uncategorized'})
+              <button onClick={() => startEditing(exp)} style={{ marginLeft: 10 }}>Edit</button>
+              <button onClick={() => handleDeleteExpense(exp._id)} style={{ marginLeft: 10, color: 'red' }}>Delete</button>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+})()}    
+
+</div>
   );
 };
 

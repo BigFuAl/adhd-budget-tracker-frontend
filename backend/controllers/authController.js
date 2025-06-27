@@ -41,6 +41,7 @@ const registerUser = async (req, res) => {
 // LOGIN USER
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log("LOGIN ATTEMPT:", email, password);
 
   try {
     console.log('🛠 Attempting login for:', email);

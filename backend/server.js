@@ -28,7 +28,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://adhd-tracker-frontend.netlify.app', // <-- replace with actual Netlify URL if different
    'https://agreeable-pebble-07982e410.2.azurestaticapps.net',
-   'https://adhd-budget-tracker-frontend.vercel.app'
+   'https://adhd-budget-tracker-frontend-f3gv9wgil-bigfuals-projects.vercel.app'
 ];
 
 

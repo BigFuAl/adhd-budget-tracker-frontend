@@ -72,10 +72,10 @@ app.use('/api/expenses', expenseRoutes);
     await connectDB();
     console.log('✅ MongoDB connected.');
 
-    const PORT = process.env.PORT || 3001;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
+    const PORT = process.env.PORT;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
   } catch (err) {
     console.error('❌ Startup error:', err);
     process.exit(1);

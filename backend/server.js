@@ -65,11 +65,19 @@ app.get('/api/test', (req, res) => {
 app.use('/api/auth', authRoutes); // ✅ This exposes /api/auth/register and /api/auth/login
 app.use('/api/expenses', expenseRoutes);
 
-// Connect to MongoDB
-connectDB(); // ← And you need this too
 
-// Start server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+(async () => {
+  try {
+    console.log('🛠 Connecting to MongoDB...');
+    await connectDB();
+    console.log('✅ MongoDB connected.');
+
+    const PORT = process.env.PORT || 3001;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ Startup error:', err);
+    process.exit(1);
+  }
+})();

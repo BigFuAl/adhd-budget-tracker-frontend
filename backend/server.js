@@ -42,6 +42,17 @@ app.use(cors({
   },
   credentials: true
 }));
+// Handle preflight requests for all routes
+app.options('*', cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed from this origin'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json()); // Parses incoming JSON
 
 // Test route

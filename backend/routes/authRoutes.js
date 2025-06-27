@@ -15,9 +15,9 @@ router.get('/profile', protect, (req, res) => {
     message: 'Access granted to protected profile route',
     user: req.user
   });
+});
   router.get('/test', (req, res) => {
   res.json({ message: 'Test route working' }); // Dummy comment to trigger redeploy
-});
 });
 
 module.exports = router;

@@ -21,7 +21,7 @@ const limiter = rateLimit({
 });
 
 // Apply limiter only to /api/login
-app.use('/api/login', limiter);
+app.use('/api/auth/login', limiter);
 
 // Middleware
 const allowedOrigins = [

@@ -9,7 +9,7 @@ const expenseRoutes = require('./routes/expenseRoutes');
 
 // Load environment variables from .env file
 dotenv.config();
-console.log('JWT_SECRET:', process.env.JWT_SECRET); // <-- Add th
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 const app = express();
 app.use(helmet()); // Secures HTTP headers

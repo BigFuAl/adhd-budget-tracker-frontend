@@ -14,7 +14,7 @@ const Login = ({ onLoginSuccess }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-
+// sanity check save
     const data = await res.json();
 
     if (res.ok) {

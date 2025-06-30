@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'dist', // 🔥 Tells Vercel where to find the output
+  },
   server: {
     proxy: {
       '/api': {

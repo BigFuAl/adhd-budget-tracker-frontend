@@ -1,97 +1,53 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react'
-import {
-  Routes,
-  Route,
-  Navigate,
-  Link,
-  useNavigate
-} from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
-import Login     from './components/Login.jsx'
-import Register  from './components/Register.jsx'
-import Profile   from './components/Profile.jsx'
+import Navbar   from './components/Navbar.jsx'
+import Login    from './components/Login.jsx'
+import Register from './components/Register.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import Profile  from './components/Profile.jsx'
 
-function Navbar({ user, onLogout }) {
-  return (
-    <nav style={{
-      display:        'flex',
-      justifyContent: 'space-between',
-      padding:        '10px 20px',
-      borderBottom:   '1px solid #ddd'
-    }}>
-      <Link to="/" style={{ fontWeight: 'bold' }}>BudgetTracker</Link>
-      {user && (
-        <div>
-          Hello, {user.name}{' '}
-          <button onClick={onLogout}>Logout</button>
-        </div>
-      )}
-    </nav>
-  )
-}
+export default function App() {
+  const [user, setUser]   = useState(null)
+  const [loading, setLoading] = useState(true)
 
-function App() {
-  const [user, setUser] = useState(null)
-  const navigate       = useNavigate()
-
-  // restore from localStorage on mount
+  // on mount, restore login state
   useEffect(() => {
     const token = localStorage.getItem('token')
     const name  = localStorage.getItem('userName')
-    if (token && name) {
-      setUser({ name })
-    }
+    if (token && name) setUser({ name })
+    setLoading(false)
   }, [])
 
-  const handleLoginSuccess = ({ token, name }) => {
+  const onLoginSuccess = ({ token, name }) => {
     localStorage.setItem('token', token)
     localStorage.setItem('userName', name)
     setUser({ name })
-    navigate('/dashboard', { replace: true })
   }
 
-  const handleLogout = () => {
+  const onLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('userName')
     setUser(null)
-    navigate('/login', { replace: true })
   }
+
+  if (loading) return null
 
   return (
     <>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={onLogout} />
 
       <Routes>
-        <Route
-          path="/login"
-          element={<Login onLoginSuccess={handleLoginSuccess} />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
+        <Route path="/login"    element={<Login onLoginSuccess={onLoginSuccess}/>} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/dashboard"
-          element={
-            user
-              ? <Dashboard user={user} />
-              : <Navigate to="/login" replace />
-          }
+          element={user ? <Dashboard user={user}/> : <Navigate to="/login" replace />}
         />
-
         <Route
           path="/profile"
-          element={
-            user
-              ? <Profile />
-              : <Navigate to="/login" replace />
-          }
+          element={user ? <Profile /> : <Navigate to="/login" replace />}
         />
-
         <Route
           path="/"
           element={<Navigate to={user ? '/dashboard' : '/login'} replace />}
@@ -100,5 +56,3 @@ function App() {
     </>
   )
 }
-
-export default App

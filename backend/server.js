@@ -27,35 +27,34 @@ const allowedOrigins = [
 
 
 
+// allow only your whitelisted + any .vercel.app, but reject others silently
 app.use(cors({
-  origin: function (origin, callback) {
-    // always allow tools like Postman
+  origin: (origin, callback) => {
+    // allow Postman / no-Origin
     if (!origin) return callback(null, true);
 
-    // allow any of your hard-coded domains...
-    if (allowedOrigins.includes(origin)) {
+    const isVercel = /\.vercel\.app$/.test(origin);
+    if (allowedOrigins.includes(origin) || isVercel) {
       return callback(null, true);
     }
 
-    // …and any Vercel preview URL ending in “.vercel.app”
-    const isVercelPreview = /\.vercel\.app$/.test(origin);
-    if (isVercelPreview) {
-      return callback(null, true);
-    }
-
-    // otherwise reject
-    return callback(new Error(`CORS not allowed from origin: ${origin}`));
+    // deny silently (no CORS headers), but don’t throw
+    return callback(null, false);
   },
   credentials: true
 }));
 
-// same for preflights:
+// preflight handler
 app.options('*', cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    if (/\.vercel\.app$/.test(origin))   return callback(null, true);
-    return callback(new Error('CORS not allowed from this origin'));
+
+    const isVercel = /\.vercel\.app$/.test(origin);
+    if (allowedOrigins.includes(origin) || isVercel) {
+      return callback(null, true);
+    }
+
+    return callback(null, false);
   },
   credentials: true
 }));

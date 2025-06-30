@@ -15,20 +15,19 @@ app.use(helmet()); // Secures HTTP headers
 
 // Middleware
 const allowedOrigins = [
+  'http://localhost:5173',
   'http://localhost:3000',
-  'https://adhd-tracker-frontend.netlify.app', // <-- replace with actual Netlify URL if different
-   'https://agreeable-pebble-07982e410.2.azurestaticapps.net',
-   'https://adhd-budget-tracker-frontend-f3gv9wgil-bigfuals-projects.vercel.app'
+  'https://adhd-tracker-frontend.netlify.app',
+  'https://agreeable-pebble-07982e410.2.azurestaticapps.net',
+  'https://adhd-budget-tracker-frontend-f3gv9wgil-bigfuals-projects.vercel.app'
 ];
 
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed from this origin'));
-    }
+    if (!origin) return callback(null, true); // Allow tools like Postman or missing Origin
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS not allowed from origin: ${origin}`));
   },
   credentials: true
 }));

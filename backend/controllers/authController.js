@@ -1,87 +1,92 @@
-const User = require('../models/User');
+// controllers/authController.js
+const User   = require('../models/User');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const jwt    = require('jsonwebtoken');
 
-// REGISTER USER
-const registerUser = async (req, res) => {
+/**
+ * POST /api/auth/register
+ */
+exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // 1) Check if email already exists
+    const existing = await User.findOne({ email });
+    if (existing) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash the password
+    // 2) Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('🔐 Hashed Password:', hashedPassword);
 
-    const user = new User({
+    // 3) Create & save
+    const user = await User.create({
       name,
       email,
       password: hashedPassword,
     });
 
-    await user.save();
-    console.log('✅ User saved to MongoDB:', user);
+    // 4) Respond with new user (no token yet)
     res.status(201).json({
       message: 'User registered successfully',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name: user.name, email: user.email },
     });
-  } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({ message: 'Server error registering user' });
   }
 };
 
-// LOGIN USER
-const loginUser = async (req, res) => {
+/**
+ * POST /api/auth/login
+ */
+exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log("LOGIN ATTEMPT:", email, password);
-
   try {
-    console.log('🛠 Attempting login for:', email);
+    // 1) Find user by email
     const user = await User.findOne({ email });
-
     if (!user) {
-      console.log('❌ User not found');
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    console.log('🔐 Comparing password...');
+    // 2) Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('🧠 Match result:', isMatch);
-
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    // 3) Sign JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email, name: user.name },
+      { id: user._id, name: user.name, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({
+    // 4) Respond with token + user info
+    res.json({
       message: 'Login successful',
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name: user.name, email: user.email },
     });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error logging in' });
   }
 };
 
-module.exports = {
-  registerUser,
-  loginUser,
+/**
+ * GET /api/auth/profile
+ * (protected — see authMiddleware)
+ */
+exports.getProfile = async (req, res) => {
+  try {
+    // authMiddleware has populated req.user
+    const { _id, name, email } = req.user;
+    res.json({
+      message: 'Profile fetched successfully',
+      user: { id: _id, name, email },
+    });
+  } catch (err) {
+    console.error('getProfile error:', err);
+    res.status(500).json({ message: 'Server error fetching profile' });
+  }
 };

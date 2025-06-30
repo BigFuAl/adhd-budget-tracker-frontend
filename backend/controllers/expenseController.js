@@ -39,6 +39,8 @@ const expenses = await Expense.find({ userId: req.user.id }).sort({ createdAt: -
 // DELETE /api/expenses/:id
 const deleteExpense = async (req, res) => {
   try {
+    console.log('User ID from token:', req.user.id);
+    console.log('Expense ID from params:', req.params.id);
     const expense = await Expense.findOneAndDelete({
   _id: req.params.id,
   userId: req.user.id

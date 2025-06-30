@@ -11,11 +11,12 @@ const Login = ({ onLoginSuccess }) => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await fetch('https://adhd-budget-tracker.onrender.com/api/auth/login', {
+      const res = await fetch("https://adhd-budget-tracker.onrender.com/api/auth/login", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
 
       if (res.ok) {

@@ -3,21 +3,33 @@ import React, { useEffect, useState } from 'react';
 const Profile = () => {
   const [message, setMessage] = useState('');
   const [user, setUser] = useState(null);
-  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    if (!token) return;
+    const token = localStorage.getItem('token');
+    console.log('🔑 token is:', token);
+
+    if (!token) {
+      setMessage('No token found – please log in.');
+      return;
+    }
 
     fetch(`${import.meta.env.VITE_API_URL}/api/auth/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log('fetch /api/auth/profile status', res.status);
+        return res.json();
+      })
       .then(data => {
+        console.log('profile data→', data);
         setMessage(data.message);
         setUser(data.user);
       })
-      .catch(() => setMessage('Error fetching profile'));
-  }, [token]);
+      .catch(err => {
+        console.error('Error fetching profile:', err);
+        setMessage('Error fetching profile');
+      });
+  }, []);
 
   return (
     <div style={{
@@ -34,7 +46,6 @@ const Profile = () => {
           <p><strong>Email:</strong> {user.email}</p>
         </div>
       )}
-      {/* Logout is now only in the Navbar */}
     </div>
   );
 };

@@ -1,11 +1,14 @@
 {
   "env": {
-    "node": true,
-    "commonjs": true,
-    "es2021": true
+    "node": true,         // enable Node globals like `require`
+    "commonjs": true,     // enable CommonJS globals like `module.exports`
+    "es2021": true        // whatever ES version you’re targeting
   },
   "extends": ["eslint:recommended"],
   "parserOptions": {
-    "ecmaVersion": 12
+    "ecmaVersion": 12      // or newer if you like
+  },
+  "rules": {
+    // any overrides you need…
   }
 }

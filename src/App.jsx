@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
+// src/App.jsx
+import React, { useState, useEffect } from 'react'
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
   Link,
   useNavigate
-} from 'react-router-dom';
+} from 'react-router-dom'
 
-import Login     from './components/Login.jsx';
-import Register  from './components/Register.jsx';
-import Profile   from './components/Profile.jsx';
-import Dashboard from './components/Dashboard.jsx';
+import Login     from './components/Login.jsx'
+import Register  from './components/Register.jsx'
+import Profile   from './components/Profile.jsx'
+import Dashboard from './components/Dashboard.jsx'
 
-// A simple navbar with logout
 function Navbar({ user, onLogout }) {
   return (
     <nav style={{
@@ -30,69 +29,76 @@ function Navbar({ user, onLogout }) {
         </div>
       )}
     </nav>
-  );
+  )
 }
 
 function App() {
-  const [user, setUser] = useState(null);
-  const navigate        = useNavigate();
+  const [user, setUser] = useState(null)
+  const navigate       = useNavigate()
 
-  // On mount, restore from localStorage
+  // restore from localStorage on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const name  = localStorage.getItem('userName');
+    const token = localStorage.getItem('token')
+    const name  = localStorage.getItem('userName')
     if (token && name) {
-      setUser({ name });
+      setUser({ name })
     }
-  }, []);
+  }, [])
 
   const handleLoginSuccess = ({ token, name }) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('userName', name);
-    setUser({ name });
-    navigate('/dashboard', { replace: true });
-  };
+    localStorage.setItem('token', token)
+    localStorage.setItem('userName', name)
+    setUser({ name })
+    navigate('/dashboard', { replace: true })
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    setUser(null);
-    navigate('/login', { replace: true });
-  };
+    localStorage.removeItem('token')
+    localStorage.removeItem('userName')
+    setUser(null)
+    navigate('/login', { replace: true })
+  }
 
   return (
     <>
       <Navbar user={user} onLogout={handleLogout} />
+
       <Routes>
         <Route
           path="/login"
           element={<Login onLoginSuccess={handleLoginSuccess} />}
         />
+
         <Route
           path="/register"
           element={<Register />}
         />
+
         <Route
           path="/dashboard"
-          element={user
-            ? <Dashboard user={user} />
-            : <Navigate to="/login" replace />
+          element={
+            user
+              ? <Dashboard user={user} />
+              : <Navigate to="/login" replace />
           }
         />
+
         <Route
           path="/profile"
-          element={user
-            ? <Profile />
-            : <Navigate to="/login" replace />
+          element={
+            user
+              ? <Profile />
+              : <Navigate to="/login" replace />
           }
         />
+
         <Route
           path="/"
           element={<Navigate to={user ? '/dashboard' : '/login'} replace />}
         />
       </Routes>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

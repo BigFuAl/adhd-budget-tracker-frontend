@@ -31,7 +31,7 @@ const Dashboard = ({ user }) => {
   // Fetch expenses on mount
   useEffect(() => {
     if (!token) return;
-    fetch(`${process.env.REACT_APP_API_URL}/api/expenses`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -45,7 +45,7 @@ const Dashboard = ({ user }) => {
       return setMessage('Please enter both a description and amount.');
     }
 
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ setTimeout(() => setShowCheck(false), 2000);
     const confirmed = window.confirm('Are you sure you want to delete this expense?');
     if (!confirmed) return;
 
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -104,7 +104,7 @@ setTimeout(() => setShowCheck(false), 2000);
   };
 
   const handleUpdateExpense = async (id) => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/expenses/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

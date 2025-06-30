@@ -28,33 +28,34 @@ const allowedOrigins = [
 
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // 1) allow Postman/no-origin
+  origin: function (origin, callback) {
+    // always allow tools like Postman
     if (!origin) return callback(null, true);
 
-    // 2) allow your explicit list…
+    // allow any of your hard-coded domains...
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    // 3) …and *any* Vercel preview or production domain under “.vercel.app”
-    if (/\.vercel\.app$/.test(origin)) {
+    // …and any Vercel preview URL ending in “.vercel.app”
+    const isVercelPreview = /\.vercel\.app$/.test(origin);
+    if (isVercelPreview) {
       return callback(null, true);
     }
 
-    // otherwise block
-    return callback(new Error(`CORS not allowed: ${origin}`));
+    // otherwise reject
+    return callback(new Error(`CORS not allowed from origin: ${origin}`));
   },
   credentials: true
 }));
 
 // same for preflights:
 app.options('*', cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error(`CORS not allowed: ${origin}`));
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (/\.vercel\.app$/.test(origin))   return callback(null, true);
+    return callback(new Error('CORS not allowed from this origin'));
   },
   credentials: true
 }));

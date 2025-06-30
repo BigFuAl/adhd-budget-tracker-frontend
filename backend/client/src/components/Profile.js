@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Dashboard from './Dashboard';
 
 const Profile = () => {
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState(null);
-
-  const token = localStorage.getItem('token');
+  const [user, setUser]     = useState(null);
+  const token               = localStorage.getItem('token');
 
   useEffect(() => {
     if (!token) return;
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/profile`,  {
+    fetch(`${import.meta.env.VITE_API_URL}/api/auth/profile`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        return res.json();
+      })
       .then(data => {
         console.log('Profile data:', data);
         setMessage(data.message);
@@ -28,22 +29,22 @@ const Profile = () => {
   }, [token]);
 
   return (
-  <div>
-    <h2>Profile Page</h2>
-    <p>{message}</p>
+    <div style={{
+      padding:    '20px',
+      maxWidth:   '400px',
+      margin:     '0 auto',
+      textAlign:  'center'
+    }}>
+      <h2 style={{ marginBottom: '1rem' }}>Your Profile</h2>
+      <p style={{ marginBottom: '1rem', color: '#555' }}>{message}</p>
 
-    {user && (
-      <>
-        <div style={{ marginTop: '10px' }}>
-          <strong>User Info:</strong>
-          <p>Name: {user.name}</p>
-          <p>Email: {user.email}</p>
+      {user && (
+        <div style={{ textAlign: 'left', lineHeight: 1.6 }}>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
         </div>
-
-        <Dashboard user={user} />
-      </>
-    )}
-  </div>
+      )}
+    </div>
   );
 };
 

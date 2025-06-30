@@ -1,4 +1,4 @@
-// routes/authRoutes.js
+/* eslint-env node, commonjs */
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { registerUser, loginUser, getProfile } = require('../controllers/authController');

@@ -26,10 +26,22 @@ const allowedOrigins = [
 ];
 
 
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow tools like Postman or missing Origin
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (!origin) {
+      // allow non-browser tools (Postman, curl, etc)
+      return callback(null, true);
+    }
+
+    // allow any vercel preview/deployment URL
+    const isVercelPreview = /\.vercel\.app$/.test(origin);
+
+    if (allowedOrigins.includes(origin) || isVercelPreview) {
+      return callback(null, true);
+    }
+
+    // otherwise block
     return callback(new Error(`CORS not allowed from origin: ${origin}`));
   },
   credentials: true
@@ -37,11 +49,11 @@ app.use(cors({
 // Handle preflight requests for all routes
 app.options('*', cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed from this origin'));
+    const isVercelPreview = /\.vercel\.app$/.test(origin);
+    if (!origin || allowedOrigins.includes(origin) || isVercelPreview) {
+      return callback(null, true);
     }
+    return callback(new Error( 'CORS not allowed from this origin' ));
   },
   credentials: true
 }));

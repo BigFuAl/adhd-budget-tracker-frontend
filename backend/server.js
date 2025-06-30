@@ -1,3 +1,5 @@
+/* eslint-env node, commonjs */
+/* eslint-disable no-undef */
 const helmet = require('helmet');
 const authRoutes = require('./routes/authRoutes');
 const express = require('express');
@@ -19,7 +21,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://adhd-tracker-frontend.netlify.app',
   'https://agreeable-pebble-07982e410.2.azurestaticapps.net',
-  'https://adhd-budget-tracker-frontend-f3gv9wgil-bigfuals-projects.vercel.app'
+  'https://adhd-budget-tracker-frontend-f3gv9wgil-bigfuals-projects.vercel.app',
+  'https://adhd-budget-tracker-frontend-u6hr-nym0cxwe5-bigfuals-projects.vercel.app'
 ];
 
 
